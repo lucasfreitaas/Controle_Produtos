@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<VBox alignment="TOP_CENTER" spacing="15.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.controller.ProdutosController"
+      style="-fx-background-color: #f2f2f2; -fx-padding: 20;">
+
+    <Label text="Cadastro de Produtos"
+           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2e2e2e;"/>
+
+    <TextField fx:id="codigoProdutoField" promptText="Código do Produto"
+               editable="false" visible="true"
+               style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 8;"/>
+
+    <TextField fx:id="nomeProdutoField" promptText="Nome do Produto"
+               style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 8;"/>
+
+    <TextField fx:id="descricaoField" promptText="Descrição"
+               style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 8;"/>
+
+    <TextField fx:id="unidadeVendaField" promptText="Unidade de Venda"
+               style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 8;"/>
+
+    <TextField fx:id="fornecedorField" promptText="Nome do Fornecedor"
+               style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-padding: 8;"/>
+
+    <CheckBox fx:id="ativoCheckBox" text="Ativo"
+              style="-fx-font-size: 13px;"/>
+
+    <HBox spacing="10">
+        <Button text="Salvar" onAction="#onSalvarClick"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 5;"/>
+        <Button text="Editar" onAction="#onEditarClick"
+                style="-fx-background-color: #FFC107; -fx-text-fill: white; -fx-background-radius: 5;"/>
+        <Button text="Excluir" onAction="#onExcluirClick"
+                style="-fx-background-color: #F44336; -fx-text-fill: white; -fx-background-radius: 5;"/>
+    </HBox>
+
+    <TableView fx:id="tabelaProdutos" prefHeight="250" prefWidth="650"
+               style="-fx-border-color: #ccc; -fx-border-radius: 5;">
+        <columns>
+            <TableColumn fx:id="colCodigo" text="Código" prefWidth="80">
+                <cellValueFactory>
+                    <PropertyValueFactory property="codigo"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="colNome" text="Nome" prefWidth="120">
+                <cellValueFactory>
+                    <PropertyValueFactory property="nome"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="160">
+                <cellValueFactory>
+                    <PropertyValueFactory property="descricao"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="colUnidade" text="Unidade" prefWidth="80">
+                <cellValueFactory>
+                    <PropertyValueFactory property="unidade"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="colFornecedor" text="Fornecedor" prefWidth="120">
+                <cellValueFactory>
+                    <PropertyValueFactory property="fornecedor"/>
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="colAtivo" text="Status" prefWidth="80">
+                <cellValueFactory>
+                    <PropertyValueFactory property="ativo"/>
+                </cellValueFactory>
+            </TableColumn>
+        </columns>
+    </TableView>
+</VBox>
