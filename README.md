@@ -55,8 +55,8 @@ Clone o repositório:
 bash
 Copiar
 Editar
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/lucasfreitaas/crud-produtos.git
+cd crud-produtos
 Configure o banco de dados no arquivo persistence.xml com as credenciais corretas e URL do banco.
 
 Compile e execute com sua IDE favorita ou via terminal:
