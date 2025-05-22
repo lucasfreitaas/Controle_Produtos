@@ -65,6 +65,6 @@ src/
 1. Clone o repositório:
 
 ```bash
-git clone https://github.com/lucasfreitaas/crud-produtos.git
-cd crud-produtos
+git clone https://github.com/lucasfreitaas/Controle_Produtos.git
+cd Controle_Produtos
 
