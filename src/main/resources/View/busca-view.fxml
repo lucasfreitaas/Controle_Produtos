@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.controller.BuscaController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <!-- Tabela para exibir fornecedores -->
+    <TableView fx:id="tabelaFornecedores" layoutX="20.0" layoutY="20.0" prefHeight="300.0" prefWidth="560.0">
+        <columns>
+            <TableColumn fx:id="colNome" text="Nome" prefWidth="120.0"/>
+            <TableColumn fx:id="colCNPJ" text="CNPJ" prefWidth="120.0"/>
+            <TableColumn fx:id="colEstado" text="Estado" prefWidth="120.0"/>
+            <TableColumn fx:id="colCidade" text="Cidade" prefWidth="120.0"/>
+        </columns>
+    </TableView>
+</AnchorPane>

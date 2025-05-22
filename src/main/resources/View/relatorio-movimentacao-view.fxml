@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="275.0" prefWidth="367.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllerRelatorios.RelatorioEstoqueController">
+
+    <VBox alignment="TOP_LEFT" spacing="15.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+        <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Relatório de Estoque" />
+
+        <HBox spacing="10">
+            <Label text="Código do Produto:" />
+            <TextField fx:id="txtCodigoProduto" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        </HBox>
+
+        <HBox prefHeight="32.0" prefWidth="340.0" spacing="10">
+            <children>
+
+                <Label text="Descrição:" />
+                <TextField fx:id="txtNome" editable="false" prefHeight="25.0" prefWidth="201.0" />
+            </children></HBox>
+    </VBox>
+
+    <Button layoutX="134.0" layoutY="227.0" onAction="#onImprimirClick" prefWidth="100.0" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 5;" text="Imprimir" />
+    <CheckBox fx:id="checkAtivos" layoutX="96.0" layoutY="189.0" text="Ativo" />
+    <CheckBox fx:id="checkInativos" layoutX="21.0" layoutY="189.0" text="Inativo" />
+   <MenuButton fx:id="menuOrdenar" layoutX="86.0" layoutY="144.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="149.0" text="Padrão">
+     <items>
+       <MenuItem mnemonicParsing="false" onAction="#onOrdemPadrao" text="Padrão" />
+       <MenuItem mnemonicParsing="false" onAction="#onOrdemEstoque" text="Estoque Atual" />
+       <MenuItem mnemonicParsing="false" onAction="#onOrdemEntradas" text="Entradas" />
+         <MenuItem mnemonicParsing="false" onAction="#onOrdemSaidas" text="Saídas" />
+     </items>
+   </MenuButton>
+   <Label layoutX="21.0" layoutY="148.0" text="Ordem:" />
+
+</AnchorPane>

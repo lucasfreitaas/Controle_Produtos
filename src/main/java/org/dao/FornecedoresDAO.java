@@ -4,18 +4,21 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
+import org.model.Fornecedores;
 import org.model.Produtos;
 
-public class ProdutosDAO {
+import java.util.List;
+
+public class FornecedoresDAO {
 
     private static final EntityManagerFactory emf =
             Persistence.createEntityManagerFactory("meuPU");
 
-    public void cadastrar(Produtos produtos){
+    public void cadastrar(Fornecedores fornecedor){
         EntityManager em = emf.createEntityManager();
         try{
             em.getTransaction().begin();
-            em.persist(produtos);
+            em.persist(fornecedor);
             em.getTransaction().commit();
         } catch (Exception e){
             em.getTransaction().rollback();
@@ -25,11 +28,11 @@ public class ProdutosDAO {
         }
     }
 
-    public Produtos buscarProdutoNoBanco(String produto_id){
+    public Fornecedores buscarFornecedorPorId(String fornecedor_id){
         EntityManager em = emf.createEntityManager();
         try{
-            return em.createQuery("SELECT p FROM Produtos p WHERE produto_id = : produto_id", Produtos.class)
-                    .setParameter("produto_id", produto_id)
+            return em.createQuery("SELECT f FROM Fornecedores f WHERE f.fornecedor_id =: fornecedor_id", Fornecedores.class)
+                    .setParameter("fornecedor_id", fornecedor_id)
                     .getSingleResult();
         }catch (NoResultException e){
             return null;
@@ -39,11 +42,11 @@ public class ProdutosDAO {
         }
     }
 
-    public void editar(Produtos produtos) {
+    public void editar(Fornecedores fornecedor){
         EntityManager em = emf.createEntityManager();
-        try {
+        try{
             em.getTransaction().begin();
-            em.merge(produtos);
+            em.merge(fornecedor);
             em.getTransaction().commit();
         } catch (Exception e){
             em.getTransaction().rollback();
@@ -53,14 +56,24 @@ public class ProdutosDAO {
         }
     }
 
-    public void excluir(Long produto_id){
+    public void excluir(Long fornecedor_id){
         try(EntityManager em = emf.createEntityManager()){
             em.getTransaction().begin();
-            Produtos produtos = em.find(Produtos.class, produto_id);
-            if (produtos != null){
-                em.remove(produtos);
+            Fornecedores fornecedor = em.find(Fornecedores.class, fornecedor_id);
+            if (fornecedor != null){
+                em.remove(fornecedor);
             }
             em.getTransaction().commit();
+        }
+    }
+
+    public List<Fornecedores> listar(){
+        EntityManager em = emf.createEntityManager();
+
+        try{
+            return em.createQuery("SELECT f FROM Fornecedores f", Fornecedores.class).getResultList();
+        } finally {
+            em.close();
         }
     }
 }

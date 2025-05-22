@@ -1,87 +1,70 @@
-Sistema de Gerenciamento de Produtos
-Este projeto é uma aplicação Java desenvolvida com JavaFX e JPA (Hibernate) para realizar o gerenciamento de produtos. Permite cadastrar, editar, excluir e visualizar produtos com informações como nome, descrição, unidade de venda, fornecedor e status de ativo.
+# 🗃️ Sistema de Gerenciamento de Produtos
 
-🛠 Tecnologias Utilizadas
-Java 17+
+Este projeto é uma aplicação Java desenvolvida com **JavaFX** e **Hibernate (JPA)** para realizar o gerenciamento completo de produtos, fornecedores e funcionários, incluindo controle de estoque com entradas e saídas e geração de relatórios em PDF. O sistema segue o padrão **MVC**, com uso de **DAO**, **FXML** e **Lombok**, além de oferecer autenticação de usuários.
 
-JavaFX
+---
 
-JPA / Hibernate
+## 🛠 Tecnologias Utilizadas
 
-FXML
+- Java 17+
+- JavaFX (FXML)
+- JPA / Hibernate
+- Lombok
+- Maven (se aplicável)
+- Banco de dados relacional (H2, MySQL, PostgreSQL, etc.)
+- iText ou JasperReports (para geração de relatórios PDF)
 
-Maven (se aplicável)
+---
 
-Banco de dados relacional (como H2, MySQL, PostgreSQL, etc.)
+## 📁 Estrutura do Projeto
 
-📁 Estrutura do Projeto
-css
-Copiar
-Editar
 src/
-├── org/
-│   ├── controller/
-│   │   └── ProdutosController.java
-│   ├── dao/
-│   │   └── ProdutosDAO.java
-│   └── model/
-│       └── Produtos.java
-resources/
-└── META-INF/
-    └── persistence.xml
-🚀 Funcionalidades
-✅ Cadastro de novo produto
+├── java/
+│ └── org/
+│ ├── controller/ # Controladores das telas principais
+│ ├── controllerRelatorios/ # Controladores específicos para relatórios PDF
+│ ├── dao/ # DAOs de produtos, funcionários, etc.
+│ ├── daoRelatorios/ # DAOs voltados para geração de dados dos relatórios
+│ ├── model/ # Entidades JPA (Produto, Fornecedor, etc.)
+│ └── principal/ # Classe principal do projeto
+│ └── module-info.java # Configuração do módulo Java
+├── resources/
+│ └── META-INF/
+│ └── persistence.xml # Configuração do Hibernate
 
-✏️ Edição de produto selecionado
 
-❌ Exclusão de produto
+---
 
-🔍 Exibição de lista de produtos em tabela
+## 🚀 Funcionalidades
 
-📦 Exibição de detalhes do produto ao selecionar
+- 🔐 Login de usuários com troca de conta
+- ✅ Cadastro completo de produtos, fornecedores e funcionários
+- ✏️ Edição e exclusão de registros
+- 🔄 Entradas e saídas de produtos no estoque
+- 📄 Geração de relatórios em PDF:
+    - Produtos cadastrados
+    - Fornecedores
+    - Movimentações de estoque
+- 🔍 Filtros e ordenações em tabelas
+- 📦 Exibição de detalhes dos registros
+- 🟢 Marcação de produtos como ativos/inativos
 
-🟢 Marcação de produtos como ativos/inativos
+---
 
-🧪 Validações
-Nome do produto deve conter ao menos 3 caracteres.
+## 🧪 Validações
 
-Descrição não pode ser vazia.
+- Nome do produto com no mínimo 3 caracteres
+- Descrição obrigatória
+- Unidade de venda padrão: `UN` (caso não informada)
+- Validações visuais e de banco
 
-Unidade de venda é preenchida com "UN" por padrão, caso deixada em branco.
+---
 
-📦 Como Executar
-Clone o repositório:
+## 📦 Como Executar
 
-bash
-Copiar
-Editar
+1. Clone o repositório:
+
+```bash
 git clone https://github.com/lucasfreitaas/crud-produtos.git
 cd crud-produtos
-Configure o banco de dados no arquivo persistence.xml com as credenciais corretas e URL do banco.
 
-Compile e execute com sua IDE favorita ou via terminal:
-
-bash
-Copiar
-Editar
-mvn clean javafx:run
-Ou execute manualmente a Main.java.
-
-📋 Exemplo de Produto
-plaintext
-Copiar
-Editar
-Nome: Paracetamol 500mg
-Descrição: Analgésico e antitérmico
-Unidade de Venda: CX (caixa)
-Fornecedor: MedPharma
-Ativo: Sim
-📍 Observações
-A classe ProdutosDAO é responsável pelas operações de persistência.
-
-A tabela é atualizada após exclusão e carregada na inicialização do sistema.
-
-O campo de ID do produto (codigoProdutoField) é apenas informativo (não editável pelo usuário).
-
-📄 Licença
-Este projeto está licenciado sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.

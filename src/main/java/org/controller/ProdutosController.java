@@ -3,25 +3,29 @@ package org.controller;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.dao.EstoqueDAO;
 import org.dao.ProdutosDAO;
 import org.model.Produtos;
+import org.model.Fornecedores;
 
+import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ProdutosController implements Initializable{
+public class ProdutosController implements Initializable {
 
     @FXML
     private TextField codigoProdutoField;
@@ -52,14 +56,18 @@ public class ProdutosController implements Initializable{
 
     private ObservableList<Produtos> listaProdutos = FXCollections.observableArrayList();
 
+    EstoqueDAO estoqueDAO = new EstoqueDAO();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("produto_id"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
         colUnidade.setCellValueFactory(new PropertyValueFactory<>("unidade"));
-        colFornecedor.setCellValueFactory(new PropertyValueFactory<>("fornecedor"));
-        colAtivo.setCellFactory(column -> new TableCell<Produtos, Boolean>() {
+        colFornecedor.setCellValueFactory(cellData ->
+           new SimpleStringProperty(cellData.getValue().getFornecedores().getNome())
+        );
+        colAtivo.setCellFactory(column -> new TableCell<Produtos, Boolean>(){
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
@@ -70,102 +78,122 @@ public class ProdutosController implements Initializable{
                 }
             }
         });
+
         carregarProdutosDoBanco();
 
-        tabelaProdutos.getSelectionModel().selectedItemProperty().addListener
-                ((observable, oldValue, newValue) -> {
-                    if (newValue != null){
-                        carregarDadosProduto(newValue);
-                    }
-                });
+        tabelaProdutos.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                carregarDadosProduto(newValue);
+            }
+        });
     }
 
     @FXML
-    public void onSalvarClick(){
+    public void onSalvarClick() {
+        Produtos produtoSelecionado = tabelaProdutos.getSelectionModel().getSelectedItem();
+        Produtos produto = new Produtos();
+
         String nome = nomeProdutoField.getText().trim();
-        if (nome.isEmpty() || nome.length() < 3){
-            mostrarAlerta("Nome do produto deve conter pelo menos 3 caracteres.");
-            return;
-        }
         String descricao = descricaoField.getText().trim();
-        if (descricao.isEmpty()){
-            mostrarAlerta("O produto não pode ficar sem uma descrição!");
-            return;
-        }
         String unidade = unidadeVendaField.getText().trim();
-        if (unidade.isEmpty()){
-            informacao("A unidade de venda não pode ser vazia. " +
-                    "Será cadastrada como 'UN' por padrão.");
-            unidade = "UN";
-        } else {
-            unidade = unidade.toUpperCase();
-        }
-        String fornecedor = fornecedorField.getText().trim();
+        String fornecedorNome = fornecedorField.getText().trim();
         boolean ativo = ativoCheckBox.isSelected();
 
-        Produtos produto = new Produtos();
-        produto.setNome(nome);
-        produto.setDescricao(descricao);
-        produto.setUnidade(unidade);
-        produto.setFornecedor(fornecedor);
-        produto.setAtivo(ativo);
+        Fornecedores fornecedor = buscarFornecedorPorNome(fornecedorNome);
 
-        try {
-            ProdutosDAO dao = new ProdutosDAO(); // nome de classe com inicial maiúscula
-            dao.cadastrar(produto);
-            informacao("Produto salvo com sucesso!");
-
-            limparCampos(); // método opcional para limpar o formulário
-        } catch (Exception e) {
-            mostrarAlerta("Erro ao salvar produto: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void onEditarClick(){
-        Produtos produtoSelecionado = tabelaProdutos.getSelectionModel().getSelectedItem();
-
-        if (produtoSelecionado != null){
-            String nome = nomeProdutoField.getText().trim();
-            String descricao = descricaoField.getText().trim();
-            String unidade = unidadeVendaField.getText().trim();
-            String fornecedor = fornecedorField.getText().trim();
-            boolean ativo = ativoCheckBox.isSelected();
-
+        if (produtoSelecionado != null) {
             produtoSelecionado.setNome(nome);
             produtoSelecionado.setDescricao(descricao);
             produtoSelecionado.setUnidade(unidade);
-            produtoSelecionado.setFornecedor(fornecedor);
             produtoSelecionado.setAtivo(ativo);
+            produtoSelecionado.setFornecedores(fornecedor);  // Set fornecedor
 
             ProdutosDAO dao = new ProdutosDAO();
             dao.editar(produtoSelecionado);
 
             tabelaProdutos.refresh();
+            tabelaProdutos.getSelectionModel().clearSelection();
+            carregarProdutosDoBanco();
             limparCampos();
         } else {
-            mostrarAlerta("Selecione um produto para editar!");
+            if (nome.isEmpty() || nome.length() < 3) {
+                mostrarAlerta("Nome do produto deve conter pelo menos 3 caracteres.");
+                return;
+            }
+            if (descricao.isEmpty()) {
+                mostrarAlerta("O produto não pode ficar sem uma descrição!");
+                return;
+            }
+            if (unidade.isEmpty()) {
+                informacao("A unidade de venda não pode ser vazia. Será cadastrada como 'UN' por padrão.");
+                unidade = "UN";
+            }
+
+            produto.setNome(nome);
+            produto.setDescricao(descricao);
+            produto.setUnidade(unidade);
+            produto.setFornecedores(fornecedor);  // Set fornecedor
+            produto.setAtivo(ativo);
+
+            ProdutosDAO dao = new ProdutosDAO();
+            dao.cadastrar(produto);
+            carregarProdutosDoBanco();
+        }
+
+        informacao("Produto salvo com sucesso!");
+        limparCampos();
+    }
+
+    @FXML
+    public void onExcluirClick() {
+        Produtos produtoSelecionado = tabelaProdutos.getSelectionModel().getSelectedItem();
+        boolean entrada = estoqueDAO.verificarEntradas(produtoSelecionado.getProduto_id());
+
+        if (!entrada){
+            if (produtoSelecionado != null) {
+                ProdutosDAO dao = new ProdutosDAO();
+                dao.excluir(produtoSelecionado.getProduto_id());
+
+                carregarProdutosDoBanco();
+                limparCampos();
+            } else {
+                mostrarAlerta("Selecione um produto para excluir!");
+            }
+        } else {
+            mostrarAlerta("Não é permitido excluir um produto que já houve movimentação.");
+            limparCampos();
         }
     }
 
     @FXML
-    public void onExcluirClick(){
-        Produtos produtoSelecionado = tabelaProdutos.getSelectionModel().getSelectedItem();
+    public void onBuscarFornecedorClick() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/busca-view.fxml"));
+            Parent root = loader.load();
 
-        if (produtoSelecionado != null){
-            ProdutosDAO dao = new ProdutosDAO();
-            dao.excluir(produtoSelecionado.getProduto_id());
+            BuscaController buscaController = loader.getController();
 
-            carregarProdutosDoBanco();
-            limparCampos();
-        } else {
-            mostrarAlerta("Selecione um produto para excluir!");
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+            Fornecedores selecionado = buscaController.getFornecedorSelecionado();
+            if (selecionado != null){
+                fornecedorField.setText(selecionado.getNome());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro.");
+            alert.setHeaderText("Não foi possível abrir a tela de busca.");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
         }
     }
 
     private void carregarProdutosDoBanco() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("meuPU"); // mesmo nome do persistence.xml
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("meuPU");
         EntityManager em = emf.createEntityManager();
 
         List<Produtos> produtos = em.createQuery("SELECT p FROM Produtos p", Produtos.class).getResultList();
@@ -176,6 +204,19 @@ public class ProdutosController implements Initializable{
         emf.close();
     }
 
+    private Fornecedores buscarFornecedorPorNome(String nome) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("meuPU");
+        EntityManager em = emf.createEntityManager();
+
+        Fornecedores fornecedor = em.createQuery("SELECT f FROM Fornecedores f WHERE f.nome = :nome", Fornecedores.class)
+                .setParameter("nome", nome)
+                .getSingleResult();
+
+        em.close();
+        emf.close();
+
+        return fornecedor;
+    }
 
     private void mostrarAlerta(String mensagem) {
         Alert alerta = new Alert(Alert.AlertType.ERROR);
@@ -185,7 +226,7 @@ public class ProdutosController implements Initializable{
         alerta.showAndWait();
     }
 
-    private void informacao(String mensagem){
+    private void informacao(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Informação!");
         alert.setHeaderText(null);
@@ -207,8 +248,7 @@ public class ProdutosController implements Initializable{
         nomeProdutoField.setText(produto.getNome());
         descricaoField.setText(produto.getDescricao());
         unidadeVendaField.setText(produto.getUnidade());
-        fornecedorField.setText(produto.getFornecedor());
+        fornecedorField.setText(produto.getFornecedores().getNome());  // Preencher com o nome do fornecedor
         ativoCheckBox.setSelected(produto.isAtivo());
     }
-
 }

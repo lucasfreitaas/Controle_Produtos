@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controller.CadastrosController">
+
+    <HBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <children>
+            <!-- MenuBar à esquerda -->
+            <MenuBar fx:id="menuBar" prefHeight="20.0" prefWidth="600.0" HBox.hgrow="ALWAYS">
+            <menus>
+                    <!-- Aba Cadastros -->
+                    <Menu text="Cadastros">
+                        <items>
+                            <MenuItem onAction="#onProdutosClick" text="Produtos" />
+                            <MenuItem onAction="#onFornecedorClick" text="Fornecedor" />
+                            <MenuItem onAction="#onFuncionariosClick" text="Funcionários" />
+                        </items>
+                    </Menu>
+
+                    <!-- Aba Movimentações -->
+                    <Menu text="Movimentações">
+                        <items>
+                            <MenuItem onAction="#onEntradaClick" text="Entrada" />
+                            <MenuItem onAction="#onSaidaClick" text="Saída" />
+                        </items>
+                    </Menu>
+
+                    <!-- Aba Relatórios -->
+                    <Menu text="Relatórios">
+                        <items>
+                            <MenuItem onAction="#onRelatorioProdutosClick" text="Relatório de Produtos" />
+                            <MenuItem onAction="#onRelatorioEtoqueClick" text="Relatório de Estoque" />
+                            <MenuItem onAction="#onRelatorioFornecedoresClick" text="Relatório de Fornecedores" />
+                        </items>
+                    </Menu>
+
+                    <!-- Aba Ajuda -->
+                    <Menu text="Ajuda">
+                        <items>
+                            <MenuItem onAction="#onAjudaClick" text="Sobre" />
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+         <TextField fx:id="labelUsuario" editable="false" focusTraversable="false" prefHeight="25.0" prefWidth="276.0" />
+
+        </children>
+    </HBox>
+        <Button fx:id="btnTrocarUsuario" layoutX="491.0" layoutY="361.0" onAction="#onTrocarUsuarioClick" prefHeight="25.0" prefWidth="95.0" text="Trocar Usuário" />
+</AnchorPane>

@@ -11,8 +11,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/produtos-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 850, 600);
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/login-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 400, 250);
         stage.setTitle("Cadastro de Produtos");
         stage.setScene(scene);
         stage.show();

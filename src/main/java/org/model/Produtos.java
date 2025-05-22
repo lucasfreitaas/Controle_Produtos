@@ -21,8 +21,9 @@ public class Produtos {
     private String descricao;
     @Column(name = "UNIDADE")
     private String unidade;
-    @Column(name = "FORNECEDOR")
-    private String fornecedor;
+    @ManyToOne
+    @JoinColumn(name = "FORNECEDOR_ID")
+    private Fornecedores fornecedores;
     @Column(name = "ATIVO")
     private boolean ativo;
 }
